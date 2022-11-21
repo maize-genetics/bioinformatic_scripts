@@ -11,7 +11,7 @@ import kotlin.system.exitProcess
  * be run.  Change this script accordingly if you care.
  *
  * To run this script on the command line:
- *    kotlinc -script scinetMAAFTscripts.kts -- -fastaListFile <input file with fasta> -scinetInputDir <Folder holding fasta on scinet> .... (all other parameters)
+ *    kotlinc -script scinetMAFFTscripts.kts -- -fastaListFile <input file with fasta> -scinetInputDir <Folder holding fasta on scinet> .... (all other parameters)
  *
  * It takes as input the following:
  *   1. a file that contains the names of fasta files one per line. Just filename, no path
