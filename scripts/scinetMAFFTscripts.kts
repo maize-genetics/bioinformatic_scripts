@@ -6,19 +6,25 @@ import kotlin.system.exitProcess
  * be multiple MAFFT commands per line, based on the number provided in the numBatch parameter.  The output is a
  * single file that may be run via a slurm job using arrays.
  *
- * THis script using ";" to separate the commands on a single line.  The ";" will execute subsequent commands when
+ * This script uses ";" to separate the commands on a single line.  The ";" will execute subsequent commands when
  * previous ones file.  If this is replaced by "&&", then a failure will stop execution - no subsequent commands will
  * be run.  Change this script accordingly if you care.
  *
  * To run this script on the command line:
- *    kotlinc -script scinetMAFFTscripts.kts -- -fastaListFile <input file with fasta> -scinetInputDir <Folder holding fasta on scinet> .... (all other parameters)
+ *    kotlinc -script scinetMAFFTscripts.kts -- -fastaListFile <input file with fasta> -scinetInputDir <Folder holding fasta on scinet>
+ *        .... (all other parameters)
  *
  * It takes as input the following:
  *   1. a file that contains the names of fasta files one per line. Just filename, no path
  *   2. the path on scinet where the inputfiles will live
  *   3. the path on scinet where the output files should be written
  *   4. FUll path and name of the scinet script to be written
- *   5. number of files to create in a batch.
+ *   5. number of MAFFT commands to write on a single line (separated by ;)
+ *
+ * It produces as output:
+ *   1.  A file to be run in a scinet slurm script.  Each line of this file contains multiple MAFFT commands.  It is
+ *       intended for a slurm script that runs using the slurm array command to batch these lines.
+ *
  */
 
 // Check for parameters

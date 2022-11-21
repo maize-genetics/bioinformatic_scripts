@@ -5,6 +5,15 @@ import kotlin.system.exitProcess
  *  To run this script at the command line, type:
  *   kotlinc -script scinetAnchorwaveScript.kts -- -refFasta <refFasta> -refGFF <refGFF> .... (all other parameters)
  *
+ *  Input:
+ *  1.  name with path for reference fasta
+ *  2.  name with path for reference gff file
+ *  3.  reference prefix which will be used to name output files, e.g. B73
+ *  4.  A tab delimited file with column headers AssemblyFullName and AssemblyShortName. This file contains the list
+ *      of assemblies to be aligned
+ *  5.  Local outputDir - folder where the created scripts will be written.
+ *  6.  Scinet outputDir - folder on scinet where output is written.  This is used in the created scripts.
+ *
  * This script will take input and create from it 2 scripts that can be used to run anchorwave on scinet:
  * These scripts mimic the  steps run in the PHG plugin AssemblyMAFFromAnchorWavePlugin
  *  1.   A script that runs the initial steps to create a CDS fasta from a ref and gff, then
