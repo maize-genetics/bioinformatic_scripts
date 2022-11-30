@@ -5,6 +5,16 @@ import kotlin.system.exitProcess
  *  To run this script at the command line, type:
  *   kotlinc -script scinetAnchorwaveScript.kts -- -refFasta <refFasta> -refGFF <refGFF> .... (all other parameters)
  *
+ *   CAVEAT: This script creates the shell scripts that will run anchorwave from a Slurm script on scinet.  HOWEVER-
+ *      it has been found this doesn't work well.  Anchorwave is very memory intensive and the running these
+ *      alignments took alot of time, often timing out when as much as 50 hours were given.  I found that to
+ *      successfully run these on scinet the assemblies needed to be stored on /90daydata and not pulled from
+ *      /project.  Pulling from /project works fine when creating BAM files and doing other processing.  But something
+ *      about anchowave proali made this not work.
+ *
+ *      So use this script as an example of how to process things, but I would not run anchorwave on scinet except via
+ *      the docker and AssemblyMAFFromAnchorwavePlugin.  Better yet - run it on cbsuxm01.
+ *
  *  Input:
  *  1.  name with path for reference fasta
  *  2.  name with path for reference gff file
