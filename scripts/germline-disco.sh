@@ -3,6 +3,7 @@
 ####################### NOTE ########################
 #   This is a general script for example purposes   #
 # Please modify it to fit your experimental design! #
+#                 Written for GATK 4                #
 ##################################################### 
 
 # Collated from Mohamed's pipeline scripts
