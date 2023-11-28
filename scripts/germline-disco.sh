@@ -49,14 +49,11 @@ do
     $GATK HaplotypeCaller -R $REFERENCE_FASTA -I ${SAMPLE_NAME}.dedup.bam -O ${SAMPLE_NAME}.gvcf.gz -ERC GVCF
 done
 
-# NOTE: GenomicsDBImport requires an interval; in our case we will
-#       iterate through all contigs defined in the reference index (.fa.fai)
-#       and import them individually - you may not want this!
-for CONTIG in $(cut -f1 "${REFERENCE_FASTA}.fai")
-do
-    VARIANT_ARGS=$(awk 'BEGIN{ORS=" "}; {print "-V " $0}' <(find . -type f -name "*.gvcf.gz"))
-    $GATK GenomicsDBImport $VARIANT_ARGS --genomicsdb-workspace-path $GENOMICS_DB_PATH -L $CONTIG
-done
+# NOTE: GenomicsDBImport requires at least one interval; in our case we use all
+#       contigs defined in the reference index (.fa.fai) - you may not want this!
+VARIANT_ARGS=$(awk 'BEGIN{ORS=" "}; {print "-V " $0}' <(find . -type f -name "*.gvcf.gz"))
+CONTIG_INTERVALS=$(awk 'BEGIN{ORS=" "}; {print "-L " $0}' <(cut -f1 "${REFERENCE_FASTA}.fai"))
+$GATK GenomicsDBImport $VARIANT_ARGS --genomicsdb-workspace-path $GENOMICS_DB_PATH $CONTIG_INTERVALS
 
 for SAMPLE_FILE in "${@:3}"
 do
