@@ -56,10 +56,4 @@ VARIANT_ARGS=$(awk 'BEGIN{ORS=" "}; {print "-V " $0}' <(find . -type f -name "*.
 CONTIG_INTERVALS=$(awk 'BEGIN{ORS=" "}; {print "-L " $0}' <(cut -f1 "${REFERENCE_FASTA}.fai"))
 $GATK GenomicsDBImport $VARIANT_ARGS --genomicsdb-workspace-path $GENOMICS_DB_PATH $CONTIG_INTERVALS
 
-for SAMPLE_FILE in "${@:3}"
-do
-    SAMPLE_NAME=$(basename -- "$SAMPLE_FILE")
-    SAMPLE_NAME="${SAMPLE_NAME%.*}"
-
-    $GATK GenotypeGVCFs -R $REFERENCE_FASTA -V gendb://$GENOMICS_DB_PATH -O ${SAMPLE_NAME}.vcf.gz
-done
+$GATK GenotypeGVCFs -R $REFERENCE_FASTA -V gendb://$GENOMICS_DB_PATH -O joint-callset.vcf.gz
