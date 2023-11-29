@@ -15,9 +15,20 @@
 # Example usage:
 #   ./germline-disco.sh reference.fa your_database sample1.fq sample2.fq sample3.fq
 
+TOTAL_THREADS=$(nproc --all)
+THREADS=$((TOTAL_THREADS - 2))
+
+MEMORY_GIGABYTES_FLOAT=$(grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^2" | bc)
+MEMORY_GIGABYTES=$(printf "%.0f" $MEMORY_GIGABYTES_FLOAT)
+
 GATK=/programs/gatk4/gatk
 if ! [ -f $GATK ]; then
   GATK=gatk
+fi
+
+# If system memory is over 100 gigabytes, increase Java's max available memory
+if [ $MEMORY_GIGABYTES -gt 100 ]; then
+  GATK="$GATK --java-options '-Xmx80g'"
 fi
 
 BWA=/programs/bwa-mem2-2.2.1/bwa-mem2
@@ -37,11 +48,11 @@ do
     SAMPLE_NAME=$(basename -- "$SAMPLE_FILE")
     SAMPLE_NAME="${SAMPLE_NAME%.*}"
 
-    $BWA mem $REFERENCE_FASTA $SAMPLE_FILE > $SAMPLE_NAME.sam
+    $BWA mem -t $THREADS $REFERENCE_FASTA $SAMPLE_FILE > $SAMPLE_NAME.sam
 
     $GATK AddOrReplaceReadGroups -I $SAMPLE_NAME.sam -O ${SAMPLE_NAME}.readgroup.sam -RGLB lib1 -RGPL ILLUMINA -RGPU unit1 -RGSM $SAMPLE_NAME
 
-    samtools sort -O BAM ${SAMPLE_NAME}.readgroup.sam > $SAMPLE_NAME.bam
+    samtools sort -@ $THREADS -O BAM ${SAMPLE_NAME}.readgroup.sam > $SAMPLE_NAME.bam
 
     $GATK MarkDuplicates --INPUT $SAMPLE_NAME.bam --METRICS_FILE ${SAMPLE_NAME}.dedup.metrics --OUTPUT ${SAMPLE_NAME}.dedup.bam 
 
