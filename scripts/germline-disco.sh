@@ -28,7 +28,7 @@ fi
 
 # If system memory is over 100 gigabytes, increase Java's max available memory
 if [ $MEMORY_GIGABYTES -gt 100 ]; then
-  GATK="$GATK --java-options '-Xmx80g'"
+  GATK="$GATK --java-options -Xmx80g"
 fi
 
 BWA=/programs/bwa-mem2-2.2.1/bwa-mem2
